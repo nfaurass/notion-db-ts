@@ -1,0 +1,38 @@
+{
+  "name": "notion-db-ts",
+  "version": "0.1.0",
+  "description": "A lightweight TypeScript ORM designed for Notion.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "test": "jest",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nfaurass/notion-db-ts.git"
+  },
+  "keywords": [
+    "notion"
+  ],
+  "author": "nfaurass",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nfaurass/notion-db-ts/issues"
+  },
+  "homepage": "https://github.com/nfaurass/notion-db-ts#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.26.1",
+    "eslint": "^9.22.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.6",
+    "typescript": "^5.8.2"
+  }
+}
