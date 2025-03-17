@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node src/NotionDB.ts",
     "test": "jest",
     "prepare": "npm run build",
     "lint": "npx eslint ."
