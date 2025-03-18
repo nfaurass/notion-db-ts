@@ -263,6 +263,39 @@ export type NotionQueryOrderBy<T> = {
     direction: "asc" | "desc";
 }
 
+export type NotionBlockType =
+    "bookmark"
+    | "breadcrumb"
+    | "bulleted_list_item"
+    | "callout"
+    | "child_database"
+    | "child_page"
+    | "column"
+    | "column_list"
+    | "divider"
+    | "embed"
+    | "equation"
+    | "file"
+    | "heading_1"
+    | "heading_2"
+    | "heading_3"
+    | "image"
+    | "link_preview"
+    | "link_to_page"
+    | "numbered_list_item"
+    | "paragraph"
+    | "pdf"
+    | "quote"
+    | "synced_block"
+    | "table"
+    | "table_of_contents"
+    | "table_row"
+    | "template"
+    | "to_do"
+    | "toggle"
+    | "unsupported"
+    | "video";
+
 export type NotionPage<T> = {
     object: "page";
     id: string;
@@ -280,13 +313,38 @@ export type NotionPage<T> = {
     public_url: string | null;
 }
 
+export type NotionBlock = {
+    object: "block";
+    id: string;
+    created_time: string;
+    last_edited_time: string;
+    created_by: Record<string, string>;
+    last_edited_by: Record<string, string>;
+    parent: Record<string, string>;
+    archived: boolean;
+    in_trash: boolean;
+    has_children: string | boolean;
+    type: NotionBlockType;
+} & {
+    [key in NotionBlockType]?: Omit<NotionFieldTypeRichText, "id" | "type">;
+};
+
 export type NotionResponse<T> = {
     object: "list";
-    results: NotionPage<T>[];
+    results: NotionPage<T>[] | NotionBlock[];
     next_cursor: string | null;
     has_more: boolean;
     type: string;
-    page_or_database: Record<string, unknown>;
+    page_or_database?: Record<string, unknown>;
+    block?: string;
     developer_survey: string;
     request_id: string;
 }
+
+export type NotionBlockResponse = Omit<NotionResponse<unknown>, "results"> & {
+    results: NotionBlock[];
+};
+
+export type NotionPageResponse<T> = Omit<NotionResponse<unknown>, "results"> & {
+    results: NotionPage<T>[];
+};
