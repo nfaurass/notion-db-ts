@@ -48,4 +48,8 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         this.resetQuery();
         return data;
     }
+
+    async findBlocks(pageId: string): Promise<string[]> {
+        return await this._connection.getBlocks(pageId);
+    }
 }
