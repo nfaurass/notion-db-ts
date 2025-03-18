@@ -4,7 +4,7 @@ import {
     NotionFieldTypeLastEditedBy, NotionFieldTypeLastEditedTime, NotionFieldTypeMultiSelect,
     NotionFieldTypeNumber, NotionFieldTypePeople, NotionFieldTypePhoneNumber, NotionFieldTypeRichText,
     NotionFieldTypeSelect, NotionFieldTypeStatus, NotionFieldTypeTitle, NotionFieldTypeUrl,
-    NotionPage, NotionResponse
+    NotionPage, NotionResponse, NotionBlock
 } from "../types/index.types";
 
 export default class NotionDBFormatter {
@@ -72,6 +72,19 @@ export default class NotionDBFormatter {
         })
 
         return records;
+    }
+
+    static formatBlocks(results: NotionBlock[]): string[] {
+        const blocks: string[] = [];
+
+        results.forEach((result) => {
+            const blockType = result.type;
+            const blockData = result[blockType];
+            if (blockData && blockData.rich_text)
+                blocks.push(`${blockType}: ${blockData.rich_text[0].plain_text.toString()}`);
+        });
+
+        return blocks;
     }
 
 }
