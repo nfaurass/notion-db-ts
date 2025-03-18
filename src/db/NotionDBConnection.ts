@@ -1,4 +1,4 @@
-import {NotionDBConfig, NotionFieldType, NotionQuery, NotionResponse} from "../types/index.types";
+import {NotionBlockResponse, NotionDBConfig, NotionFieldType, NotionQuery, NotionResponse} from "../types/index.types";
 import NotionDBTable from "./NotionDBTable";
 import NotionDBEndpoints from "./NotionDBEndpoints";
 import NotionDBFormatter from "./NotionDBFormatter";
@@ -26,5 +26,17 @@ export default class NotionDBConnection {
         );
         const response = await request.json();
         return NotionDBFormatter.formatResponse(response as NotionResponse<T>, table.schema);
+    }
+
+    async getBlocks(pageId: string): Promise<string[]> {
+        const request = await fetch(
+            NotionDBEndpoints.query_page_for_content(pageId) as string,
+            {
+                method: "GET",
+                headers: this._headers,
+            }
+        );
+        const response = await request.json();
+        return NotionDBFormatter.formatBlocks((response as NotionBlockResponse).results);
     }
 }
