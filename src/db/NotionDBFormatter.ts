@@ -65,7 +65,7 @@ export default class NotionDBFormatter {
             Object.entries(schema).forEach(
                 ([field, type]: [keyof T, NotionFieldType]) => {
                     const fieldValue = page.properties[field];
-                    record[field] = this.getFieldContent(fieldValue, type);
+                    if (fieldValue) record[field] = this.getFieldContent(fieldValue, type);
                 }
             );
             records.push(record);
