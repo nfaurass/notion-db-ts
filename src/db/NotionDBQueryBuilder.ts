@@ -53,7 +53,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return await this._connection.getBlocks(pageId);
     }
 
-    async update(pageId: string, fields: Partial<Record<keyof T, string>>) {
+    async updateRecord(pageId: string, fields: Partial<Record<keyof T, string>>) {
         const data = await this._connection.patch<T>(pageId, fields, this._model);
         this.resetQuery();
         return data;
