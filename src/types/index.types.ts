@@ -348,3 +348,5 @@ export type NotionBlockResponse = Omit<NotionResponse<unknown>, "results"> & {
 export type NotionPageResponse<T> = Omit<NotionResponse<unknown>, "results"> & {
     results: NotionPage<T>[];
 };
+
+export type NotionDeletePageType = "in_trash" | "archive";
