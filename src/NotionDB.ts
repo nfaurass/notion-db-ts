@@ -1,11 +1,11 @@
 import {NotionDBConfig, NotionFieldType} from "./types/index.types";
 import NotionDBConnection from "./db/NotionDBConnection";
-import NotionDBTable from "./db/NotionDBTable";
+import NotionDBModel from "./db/NotionDBModel";
 import NotionDBQueryBuilder from "./db/NotionDBQueryBuilder";
 
 export default class NotionDB {
     private readonly _config: NotionDBConfig;
-    private readonly _tables: Set<NotionDBTable<Record<string, NotionFieldType>>> = new Set();
+    private readonly _models: Set<NotionDBModel<Record<string, NotionFieldType>>> = new Set();
     private readonly _connection: NotionDBConnection;
 
     constructor(config: NotionDBConfig) {
@@ -17,17 +17,17 @@ export default class NotionDB {
         return this._config;
     }
 
-    public get tables() {
-        return this._tables;
+    public get models() {
+        return this._models;
     };
 
-    defineTable<T extends Record<string, NotionFieldType>>(name: string, id: string, schema: T): NotionDBTable<T> {
-        const table = new NotionDBTable<T>(name, id, schema);
-        this._tables.add(table as NotionDBTable<Record<string, NotionFieldType>>);
-        return table;
+    defineModel<T extends Record<string, NotionFieldType>>(name: string, id: string, schema: T): NotionDBModel<T> {
+        const model = new NotionDBModel<T>(name, id, schema);
+        this._models.add(model as NotionDBModel<Record<string, NotionFieldType>>);
+        return model;
     }
 
-    table<T extends Record<string, NotionFieldType>>(notionTable: NotionDBTable<T>): NotionDBQueryBuilder<T> {
-        return new NotionDBQueryBuilder<T>(notionTable, this._connection);
+    model<T extends Record<string, NotionFieldType>>(notionModel: NotionDBModel<T>): NotionDBQueryBuilder<T> {
+        return new NotionDBQueryBuilder<T>(notionModel, this._connection);
     }
 }

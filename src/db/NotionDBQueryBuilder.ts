@@ -1,14 +1,14 @@
 import NotionDBConnection from "./NotionDBConnection";
-import NotionDBTable from "./NotionDBTable";
+import NotionDBModel from "./NotionDBModel";
 import {NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy} from "../types/index.types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
-    private readonly _table: NotionDBTable<T>;
+    private readonly _table: NotionDBModel<T>;
     private _connection: NotionDBConnection;
     public query: NotionQuery<T> = {};
     private _itemToCreate: T | null = null;
 
-    constructor(table: NotionDBTable<T>, connection: NotionDBConnection) {
+    constructor(table: NotionDBModel<T>, connection: NotionDBConnection) {
         this._table = table;
         this._connection = connection;
     }

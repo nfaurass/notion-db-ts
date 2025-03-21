@@ -1,6 +1,6 @@
 import {NotionFieldType} from "../types/index.types";
 
-export default class NotionDBTable<T extends Record<string, NotionFieldType>> {
+export default class NotionDBModel<T extends Record<string, NotionFieldType>> {
     public readonly name: string;
     public readonly id: string;
     public readonly schema: T;

@@ -6,7 +6,7 @@ import {
     NotionQuery,
     NotionResponse
 } from "../types/index.types";
-import NotionDBTable from "./NotionDBTable";
+import NotionDBModel from "./NotionDBModel";
 import NotionDBEndpoints from "./NotionDBEndpoints";
 import NotionDBFormatter from "./NotionDBFormatter";
 
@@ -23,16 +23,16 @@ export default class NotionDBConnection {
         };
     }
 
-    async get<T extends Record<string, NotionFieldType>>(query: NotionQuery<T>, table: NotionDBTable<T>): Promise<Record<keyof T, string>[]> {
+    async get<T extends Record<string, NotionFieldType>>(query: NotionQuery<T>, model: NotionDBModel<T>): Promise<Record<keyof T, string>[]> {
         const request = await fetch(
-            NotionDBEndpoints.query_table_for_records(table.id) as string,
+            NotionDBEndpoints.query_model_for_records(model.id) as string,
             {
                 method: "POST",
                 headers: this._headers,
             }
         );
         const response = await request.json();
-        return NotionDBFormatter.formatResponse(response as NotionResponse<T>, table.schema);
+        return NotionDBFormatter.formatResponse(response as NotionResponse<T>, model.schema);
     }
 
     async getBlocks(pageId: string): Promise<string[]> {
@@ -47,8 +47,8 @@ export default class NotionDBConnection {
         return NotionDBFormatter.formatBlocks((response as NotionBlockResponse).results);
     }
 
-    async patch<T extends Record<string, NotionFieldType>>(pageId: string, fields: Partial<Record<keyof T, string>>, table: NotionDBTable<T>) {
-        const payload = NotionDBFormatter.formatUpdateRequest(fields, table.schema);
+    async patch<T extends Record<string, NotionFieldType>>(pageId: string, fields: Partial<Record<keyof T, string>>, model: NotionDBModel<T>) {
+        const payload = NotionDBFormatter.formatUpdateRequest(fields, model.schema);
         const request = await fetch(
             NotionDBEndpoints.update_properties_for_page(pageId) as string,
             {
