@@ -63,7 +63,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return await this._connection.delete(pageId, type);
     }
 
-    async restore(pageId: string) {
+    async restoreRecord(pageId: string) {
         return await this._connection.restore(pageId);
     }
 }
