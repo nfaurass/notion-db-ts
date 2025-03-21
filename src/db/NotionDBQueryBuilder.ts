@@ -54,9 +54,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     }
 
     async updateRecord(recordId: string, fields: Partial<Record<keyof T, string>>) {
-        const data = await this._connection.patch<T>(recordId, fields, this._model);
-        this.resetQuery();
-        return data;
+        return await this._connection.patch<T>(recordId, fields, this._model);
     }
 
     async softDelete(recordId: string, type: NotionDeletePageType) {
@@ -66,4 +64,5 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     async restoreRecord(recordId: string) {
         return await this._connection.restore(recordId);
     }
+
 }
