@@ -119,6 +119,9 @@ export default class NotionDBFormatter {
             rich_text: value => (
                 {rich_text: [{text: {content: value}}]}
             ),
+            title: value => (
+                {title: [{text: {content: value}}]}
+            ),
         };
 
         const properties = Object.entries(fields).reduce(
