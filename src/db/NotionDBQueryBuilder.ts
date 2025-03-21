@@ -49,7 +49,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return data;
     }
 
-    async findBlocks(pageId: string): Promise<string[]> {
+    async getPageContent(pageId: string): Promise<string[]> {
         return await this._connection.getBlocks(pageId);
     }
 
