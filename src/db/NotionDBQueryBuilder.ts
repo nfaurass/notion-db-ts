@@ -43,7 +43,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return this;
     }
 
-    async find(): Promise<Record<keyof T, string>[]> {
+    async findAll(): Promise<Record<keyof T, string>[]> {
         const data = await this._connection.get<T>(this.query, this._model);
         this.resetQuery();
         return data;
