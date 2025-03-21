@@ -39,4 +39,18 @@ export default class NotionDBConnection {
         const response = await request.json();
         return NotionDBFormatter.formatBlocks((response as NotionBlockResponse).results);
     }
+
+    async patch<T extends Record<string, NotionFieldType>>(pageId: string, fields: Partial<Record<keyof T, string>>, table: NotionDBTable<T>) {
+        const payload = NotionDBFormatter.formatUpdateRequest(fields, table.schema);
+        const request = await fetch(
+            NotionDBEndpoints.update_properties_for_page(pageId) as string,
+            {
+                method: "PATCH",
+                headers: this._headers,
+                body: JSON.stringify(payload)
+            }
+        );
+        return await request.json();
+    }
+
 }
