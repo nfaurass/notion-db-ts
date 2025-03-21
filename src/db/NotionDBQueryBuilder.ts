@@ -62,4 +62,8 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     async delete(pageId: string, type: NotionDeletePageType) {
         return await this._connection.delete(pageId, type);
     }
+
+    async restore(pageId: string) {
+        return await this._connection.restore(pageId);
+    }
 }
