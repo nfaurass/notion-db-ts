@@ -1,6 +1,6 @@
 import NotionDBConnection from "./NotionDBConnection";
 import NotionDBTable from "./NotionDBTable";
-import {NotionFieldType, NotionQuery, NotionQueryOrderBy} from "../types/index.types";
+import {NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy} from "../types/index.types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
     private readonly _table: NotionDBTable<T>;
@@ -57,5 +57,9 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         const data = await this._connection.patch<T>(pageId, fields, this._table);
         this.resetQuery();
         return data;
+    }
+
+    async delete(pageId: string, type: NotionDeletePageType) {
+        return await this._connection.delete(pageId, type);
     }
 }
