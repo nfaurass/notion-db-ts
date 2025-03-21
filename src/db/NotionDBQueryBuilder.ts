@@ -52,4 +52,10 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     async findBlocks(pageId: string): Promise<string[]> {
         return await this._connection.getBlocks(pageId);
     }
+
+    async update(pageId: string, fields: Partial<Record<keyof T, string>>) {
+        const data = await this._connection.patch<T>(pageId, fields, this._table);
+        this.resetQuery();
+        return data;
+    }
 }
