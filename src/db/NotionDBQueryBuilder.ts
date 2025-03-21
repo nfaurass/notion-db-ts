@@ -49,21 +49,21 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return data;
     }
 
-    async getPageContent(pageId: string): Promise<string[]> {
-        return await this._connection.getBlocks(pageId);
+    async getPageContent(recordId: string): Promise<string[]> {
+        return await this._connection.getBlocks(recordId);
     }
 
-    async updateRecord(pageId: string, fields: Partial<Record<keyof T, string>>) {
-        const data = await this._connection.patch<T>(pageId, fields, this._model);
+    async updateRecord(recordId: string, fields: Partial<Record<keyof T, string>>) {
+        const data = await this._connection.patch<T>(recordId, fields, this._model);
         this.resetQuery();
         return data;
     }
 
-    async softDelete(pageId: string, type: NotionDeletePageType) {
-        return await this._connection.delete(pageId, type);
+    async softDelete(recordId: string, type: NotionDeletePageType) {
+        return await this._connection.delete(recordId, type);
     }
 
-    async restoreRecord(pageId: string) {
-        return await this._connection.restore(pageId);
+    async restoreRecord(recordId: string) {
+        return await this._connection.restore(recordId);
     }
 }
