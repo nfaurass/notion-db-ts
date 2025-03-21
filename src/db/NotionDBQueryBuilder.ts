@@ -59,7 +59,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return data;
     }
 
-    async delete(pageId: string, type: NotionDeletePageType) {
+    async softDelete(pageId: string, type: NotionDeletePageType) {
         return await this._connection.delete(pageId, type);
     }
 
