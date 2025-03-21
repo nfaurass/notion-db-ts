@@ -3,13 +3,13 @@ import NotionDBModel from "./NotionDBModel";
 import {NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy} from "../types/index.types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
-    private readonly _table: NotionDBModel<T>;
+    private readonly _model: NotionDBModel<T>;
     private _connection: NotionDBConnection;
     public query: NotionQuery<T> = {};
     private _itemToCreate: T | null = null;
 
-    constructor(table: NotionDBModel<T>, connection: NotionDBConnection) {
-        this._table = table;
+    constructor(model: NotionDBModel<T>, connection: NotionDBConnection) {
+        this._model = model;
         this._connection = connection;
     }
 
@@ -44,7 +44,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     }
 
     async find(): Promise<Record<keyof T, string>[]> {
-        const data = await this._connection.get<T>(this.query, this._table);
+        const data = await this._connection.get<T>(this.query, this._model);
         this.resetQuery();
         return data;
     }
@@ -54,7 +54,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     }
 
     async update(pageId: string, fields: Partial<Record<keyof T, string>>) {
-        const data = await this._connection.patch<T>(pageId, fields, this._table);
+        const data = await this._connection.patch<T>(pageId, fields, this._model);
         this.resetQuery();
         return data;
     }
