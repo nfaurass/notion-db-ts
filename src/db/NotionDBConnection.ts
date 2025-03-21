@@ -1,4 +1,11 @@
-import {NotionBlockResponse, NotionDBConfig, NotionFieldType, NotionQuery, NotionResponse} from "../types/index.types";
+import {
+    NotionBlockResponse,
+    NotionDBConfig,
+    NotionDeletePageType,
+    NotionFieldType,
+    NotionQuery,
+    NotionResponse
+} from "../types/index.types";
 import NotionDBTable from "./NotionDBTable";
 import NotionDBEndpoints from "./NotionDBEndpoints";
 import NotionDBFormatter from "./NotionDBFormatter";
@@ -48,6 +55,18 @@ export default class NotionDBConnection {
                 method: "PATCH",
                 headers: this._headers,
                 body: JSON.stringify(payload)
+            }
+        );
+        return await request.json();
+    }
+
+    async delete(pageId: string, type: NotionDeletePageType) {
+        const request = await fetch(
+            NotionDBEndpoints.update_properties_for_page(pageId) as string,
+            {
+                method: "PATCH",
+                headers: this._headers,
+                body: JSON.stringify({[type]: true})
             }
         );
         return await request.json();
