@@ -72,4 +72,16 @@ export default class NotionDBConnection {
         return await request.json();
     }
 
+    async restore(pageId: string) {
+        const request = await fetch(
+            NotionDBEndpoints.update_properties_for_page(pageId) as string,
+            {
+                method: "PATCH",
+                headers: this._headers,
+                body: JSON.stringify({archived: false, in_trash: false})
+            }
+        );
+        return await request.json();
+    }
+
 }
