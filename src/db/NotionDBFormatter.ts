@@ -87,4 +87,50 @@ export default class NotionDBFormatter {
         return blocks;
     }
 
+    static formatUpdateRequest<T extends Record<string, NotionFieldType>>(fields: Partial<Record<keyof T, string>>, schema: T) {
+        const propertyMap: Partial<Record<NotionFieldType, (value: string) => unknown>> = {
+            url: value => (
+                {url: value}
+            ),
+            email: value => (
+                {email: value}
+            ),
+            phone_number: value => (
+                {phone_number: value}
+            ),
+            number: value => (
+                {number: Number(value)}
+            ),
+            date: value => (
+                {date: {start: value, end: null, time_zone: null}}
+            ),
+            checkbox: value => (
+                {checkbox: Boolean(value)}
+            ),
+            status: value => (
+                {status: {name: value}}
+            ),
+            select: value => (
+                {select: {name: value}}
+            ),
+            multi_select: value => (
+                {multi_select: value.split(",").map(name => ({name}))}
+            ),
+            rich_text: value => (
+                {rich_text: [{text: {content: value}}]}
+            ),
+        };
+
+        const properties = Object.entries(fields).reduce(
+            (acc, [field, value]) => {
+                if (!value) return acc;
+                const fieldType = schema[field as keyof T];
+                const formatter = propertyMap[fieldType];
+                if (formatter) acc[field as keyof T] = formatter(value);
+                return acc;
+            }, {} as Partial<Record<keyof T, unknown>>
+        );
+
+        return {properties};
+    }
 }
