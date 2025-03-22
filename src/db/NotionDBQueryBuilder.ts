@@ -1,22 +1,19 @@
 import NotionDBConnection from "./NotionDBConnection";
 import NotionDBModel from "./NotionDBModel";
-import {NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy} from "../types/index.types";
+import {
+    NotionDeletePageType,
+    NotionFieldType,
+    NotionQuery,
+    NotionQueryOrderBy,
+} from "../types/index.types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
-    private readonly _model: NotionDBModel<T>;
-    private _connection: NotionDBConnection;
     public query: NotionQuery<T> = {};
-    private _itemToCreate: T | null = null;
 
-    constructor(model: NotionDBModel<T>, connection: NotionDBConnection) {
-        this._model = model;
-        this._connection = connection;
+    constructor(private readonly _model: NotionDBModel<T>, private _connection: NotionDBConnection) {
     }
 
-    private resetQuery() {
-        this.query = {};
-        this._itemToCreate = null;
-    }
+    private resetQuery = () => this.query = {};
 
     public where(condition: Partial<Record<keyof T, string>>): this {
         this.query.where = condition;
@@ -49,24 +46,13 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return data;
     }
 
-    async getPageContent(recordId: string): Promise<string[]> {
-        return await this._connection.getBlocks(recordId);
-    }
+    getPageContent = (recordId: string): Promise<string[]> => this._connection.getBlocks(recordId);
 
-    async updateRecord(recordId: string, fields: Partial<Record<keyof T, string>>) {
-        return await this._connection.patch<T>(recordId, fields, this._model);
-    }
+    updateRecord = (recordId: string, fields: Partial<Record<keyof T, string>>) => this._connection.patch<T>(recordId, fields, this._model);
 
-    async softDelete(recordId: string, type: NotionDeletePageType) {
-        return await this._connection.delete(recordId, type);
-    }
+    softDelete = (recordId: string, type: NotionDeletePageType) => this._connection.delete(recordId, type);
 
-    async restoreRecord(recordId: string) {
-        return await this._connection.restore(recordId);
-    }
+    restoreRecord = (recordId: string) => this._connection.restore(recordId);
 
-    async createRecord(record: Record<keyof T, string>) {
-        return await this._connection.post(record, this._model);
-    }
-
+    createRecord = (record: Record<keyof T, string>) => this._connection.post(record, this._model);
 }
