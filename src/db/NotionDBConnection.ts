@@ -84,4 +84,19 @@ export default class NotionDBConnection {
         return await request.json();
     }
 
+
+    async post<T extends Record<string, NotionFieldType>>(record: Record<keyof T, string>, model: NotionDBModel<T>) {
+        const payload = NotionDBFormatter.formatCreateRequest(record, model.schema);
+        console.log(payload);
+        const request = await fetch(
+            NotionDBEndpoints.create_page_with_properties() as string,
+            {
+                method: "POST",
+                headers: this._headers,
+                body: JSON.stringify({parent: {database_id: model.id.toString()}, ...payload})
+            }
+        );
+        return await request.json();
+    }
+
 }
