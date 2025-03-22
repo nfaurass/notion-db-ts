@@ -65,4 +65,8 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return await this._connection.restore(recordId);
     }
 
+    async createRecord(record: Record<keyof T, string>) {
+        return await this._connection.post(record, this._model);
+    }
+
 }
