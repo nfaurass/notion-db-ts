@@ -66,7 +66,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         });
     }
 
-    softDelete = async (recordId: string, type: NotionDeletePageType) => {
+    deleteRecord = async (recordId: string, type: NotionDeletePageType) => {
         return this.withCapability("update", async () => {
             return await this._connection.delete(recordId, type)
         });
