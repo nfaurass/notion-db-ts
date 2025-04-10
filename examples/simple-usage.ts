@@ -84,11 +84,11 @@ const Articles = notion.defineModel("articles", "1b7e15184d4d80a29b93e434febdff3
     // })
 
     // Soft delete a Dog record by moving it to archive.
-    const archivedDog = await notion.model(Dogs).softDelete("1b7e15184d4d80b59e28f1d1f333aea2", "archived"); // Archive a dog record.
+    const archivedDog = await notion.model(Dogs).deleteRecord("1b7e15184d4d80b59e28f1d1f333aea2", "archived"); // Archive a dog record.
     console.log(`Dog moved to archive:`, archivedDog); // Output archived dog record.
 
     // Soft delete a Dog record by moving it to trash.
-    const trashedDog = await notion.model(Dogs).softDelete("1b7e15184d4d8030b7c4ea0a3574ffbe", "in_trash"); // Move a dog record to trash.
+    const trashedDog = await notion.model(Dogs).deleteRecord("1b7e15184d4d8030b7c4ea0a3574ffbe", "in_trash"); // Move a dog record to trash.
     console.log(`Dog moved to trash:`, trashedDog); // Output trashed dog record.
 
     // Restore a previously soft-deleted Dog record.
