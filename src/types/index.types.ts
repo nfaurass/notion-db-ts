@@ -360,3 +360,9 @@ export type NotionErrorResponse = {
 }
 
 export type NotionSafeResponse<T = unknown> = | { status: "success"; data: T; } | { status: "error"; errors: unknown; };
+
+export type NotionHeaders = {
+    "Authorization": string;
+    "Notion-Version": string;
+    "Content-Type": string;
+}
