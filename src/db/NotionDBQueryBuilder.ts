@@ -1,16 +1,25 @@
 import NotionDBConnection from "./NotionDBConnection";
 import NotionDBModel from "./NotionDBModel";
 import {
-    NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy, NotionSafeResponse,
+    NotionDBConfig, NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy, NotionSafeResponse,
 } from "../types/index.types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
     public query: NotionQuery<T> = {};
 
-    constructor(private readonly _model: NotionDBModel<T>, private _connection: NotionDBConnection) {
+    constructor(private readonly _model: NotionDBModel<T>, private _connection: NotionDBConnection, private readonly _config: NotionDBConfig) {
     }
 
     private resetQuery = () => this.query = {};
+
+    private async withCapability<T>(operation: "read" | "update" | "insert", fn: () => Promise<NotionSafeResponse<T>>):
+        Promise<NotionSafeResponse<T> | { status: "error"; errors: string }> {
+        if (!this._config.capabilities.content.includes(operation)) return {
+            status: "error",
+            errors: `${operation} capability is not enabled in this configuration.`
+        };
+        return await fn();
+    }
 
     public where(condition: Partial<Record<keyof T, string>>): this {
         this.query.where = condition;
@@ -38,18 +47,40 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
     }
 
     async findAll(): Promise<NotionSafeResponse<Record<keyof T, string>[]>> {
-        const data = await this._connection.get<T>(this.query, this._model);
-        this.resetQuery();
-        return data;
+        return this.withCapability("read", async () => {
+            const data = await this._connection.get<T>(this.query, this._model);
+            this.resetQuery();
+            return data;
+        });
     }
 
-    getPageContent = (recordId: string) => this._connection.getBlocks(recordId);
+    getPageContent = async (recordId: string) => {
+        return this.withCapability("read", async () => {
+            return await this._connection.getBlocks(recordId)
+        });
+    }
 
-    updateRecord = (recordId: string, fields: Partial<Record<keyof T, string>>) => this._connection.patch<T>(recordId, fields, this._model);
+    updateRecord = async (recordId: string, fields: Partial<Record<keyof T, string>>) => {
+        return this.withCapability("update", async () => {
+            return await this._connection.patch<T>(recordId, fields, this._model)
+        });
+    }
 
-    softDelete = (recordId: string, type: NotionDeletePageType) => this._connection.delete(recordId, type);
+    softDelete = async (recordId: string, type: NotionDeletePageType) => {
+        return this.withCapability("update", async () => {
+            return await this._connection.delete(recordId, type)
+        });
+    }
 
-    restoreRecord = (recordId: string) => this._connection.restore(recordId);
+    restoreRecord = async (recordId: string) => {
+        return this.withCapability("update", async () => {
+            return await this._connection.restore(recordId)
+        });
+    }
 
-    createRecord = (record: Record<keyof T, string>) => this._connection.post(record, this._model);
+    createRecord = async (record: Record<keyof T, string>) => {
+        return this.withCapability("insert", async () => {
+            return await this._connection.post(record, this._model)
+        });
+    }
 }
