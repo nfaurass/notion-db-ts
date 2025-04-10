@@ -1,6 +1,6 @@
 import {
     NotionBlockResponse, NotionDBConfig, NotionDeletePageType, NotionFieldType, NotionQuery,
-    NotionErrorResponse, NotionSafeResponse, NotionResponse, NotionPage, NotionBlockType
+    NotionErrorResponse, NotionSafeResponse, NotionResponse, NotionPage, NotionBlockType, NotionHeaders
 } from "../types/index.types";
 import NotionDBModel, {NotionDBError} from "./NotionDBModel";
 import NotionDBEndpoints from "./NotionDBEndpoints";
@@ -8,7 +8,7 @@ import NotionDBFormatter from "./NotionDBFormatter";
 
 export default class NotionDBConnection {
     private readonly _config: NotionDBConfig;
-    private readonly _headers;
+    private readonly _headers: NotionHeaders;
 
     private createListPayload<T>(item: NotionPage<T>) {
         return {
@@ -62,7 +62,7 @@ export default class NotionDBConnection {
             "Authorization": `Bearer ${config.integrationToken}`,
             "Notion-Version": "2022-06-28",
             "Content-Type": "application/json",
-        };
+        } as NotionHeaders;
     }
 
     async get<T extends Record<string, NotionFieldType>>(query: NotionQuery<T>, model: NotionDBModel<T>): Promise<NotionSafeResponse<Record<keyof T, string>[]>> {
