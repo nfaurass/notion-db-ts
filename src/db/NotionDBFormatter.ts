@@ -4,7 +4,7 @@ import {
     NotionFieldTypeLastEditedBy, NotionFieldTypeLastEditedTime, NotionFieldTypeMultiSelect,
     NotionFieldTypeNumber, NotionFieldTypePeople, NotionFieldTypePhoneNumber, NotionFieldTypeRichText,
     NotionFieldTypeSelect, NotionFieldTypeStatus, NotionFieldTypeTitle, NotionFieldTypeUrl,
-    NotionPage, NotionResponse, NotionBlock
+    NotionPage, NotionResponse, NotionBlock, NotionBlockType
 } from "../types/index.types";
 
 export default class NotionDBFormatter {
@@ -116,13 +116,13 @@ export default class NotionDBFormatter {
         });
     }
 
-    static formatBlocks(results: NotionBlock[]): string[] {
-        return results.reduce((acc: string[], result) => {
-            const blockType = result.type;
+    static formatBlocks(results: NotionBlock[]): Record<NotionBlockType, unknown> {
+        return results.reduce((acc: Record<NotionBlockType, string | unknown>, result) => {
+            const blockType = result.type as NotionBlockType;
             const blockData = result[blockType];
-            if (blockData && blockData.rich_text) acc.push(`${blockType}: ${blockData.rich_text[0].plain_text}`);
+            if (blockData && blockData.rich_text && blockData.rich_text[0]) acc[blockType] = blockData.rich_text[0].plain_text;
             return acc;
-        }, []);
+        }, {} as Record<NotionBlockType, unknown>);
     }
 
     static formatUpdateRequest<T extends Record<string, NotionFieldType>>(fields: Partial<Record<keyof T, string>>, schema: T) {
