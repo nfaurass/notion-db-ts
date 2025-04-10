@@ -350,3 +350,13 @@ export type NotionPageResponse<T> = Omit<NotionResponse<unknown>, "results"> & {
 };
 
 export type NotionDeletePageType = "in_trash" | "archived";
+
+export type NotionErrorResponse = {
+    object: "error";
+    status: number;
+    code: string;
+    message: string;
+    request_id: string;
+}
+
+export type NotionSafeResponse<T = unknown> = | { status: "success"; data: T; } | { status: "error"; errors: unknown; };
