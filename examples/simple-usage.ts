@@ -1,146 +1,97 @@
+// Import main NotionDB class from the package.
 import NotionDB from "../src/NotionDB";
-import {NotionDBConfigCapabilities, NotionFieldType} from "../src/types/index.types";
-import NotionDBModel from "../src/db/NotionDBModel";
+// import NotionDB from "notion-db-ts" // Use this for production.
 
-const myIntegrationToken: string = "ntn_60483456333LYN...";
-const myCapabilities: NotionDBConfigCapabilities = {
-    comment: ["read", "insert"],
-    content: ["read", "insert", "update"],
-    user: "no",
-};
-const myDatabase: string = "1b7e1518...";
+// Import the configuration interface for NotionDB.
+import {NotionDBConfig} from "../src/types/index.types";
 
-const notion = new NotionDB(
+// Define the Notion Database configuration.
+const config: NotionDBConfig = {
+    integrationToken: "ntn_6048....", // Set integration token.
+    capabilities: { // Specify allowed operations.
+        comment: ["read", "insert"], // Allow comment read and insert.
+        content: ["read", "insert", "update"], // Allow content read, insert, and update.
+        user: "no", // Disable user operations.
+    },
+    database: "1b7e15184d4d8004abe9ffcc33d9fda6", // Define associated database id.
+}
+
+// Create an instance of NotionDB using the configuration.
+const notion = new NotionDB(config); // Instantiate main NotionDB class.
+
+// Define the "Dogs" model with its database id and schema.
+const Dogs = notion.defineModel("dogs", "1b7e15184d4d80cb9494fab219e447d6",
     {
-        integrationToken: myIntegrationToken,
-        capabilities: myCapabilities,
-        database: myDatabase,
+        name: "title", // Field 'name' of type 'title'.
+        image: "url", // Field 'image' of type 'url'.
     }
 );
 
-const Dogs = notion.defineModel("dogs", "...19e447d6",
+// Define the "Articles" model with its database id and schema.
+const Articles = notion.defineModel("articles", "1b7e15184d4d80a29b93e434febdff3a",
     {
-        name: "title",
-        image: "url",
+        date: "date", // Field 'date' of type 'date'.
+        title: "title", // Field 'title' of type 'title'.
+        content: "rich_text", // Field 'content' of type 'rich_text'.
+        author: "people", // Field 'author' of type 'people'.
+        isPublished: "status", // Field 'isPublished' of type 'status'.
+        createdAt: "created_time", // Field 'createdAt' of type 'created_time'.
+        createdBy: "created_by", // Field 'createdBy' of type 'created_by'.
+        lastEditedTime: "last_edited_time", // Field 'lastEditedTime' of type 'last_edited_time'.
+        lastEditedBy: "last_edited_by", // Field 'lastEditedBy' of type 'last_edited_by'.
     }
 );
 
-const Articles = notion.defineModel("articles", "...febdff3a",
-    {
-        date: "date",
-        title: "title",
-        content: "rich_text",
-        author: "people",
-        isPublished: "status",
-        createdAt: "created_time",
-        createdBy: "created_by",
-        lastEditedTime: "last_edited_time",
-        lastEditedBy: "last_edited_by",
-    }
-);
-
-async function fetchData<T extends Record<string, NotionFieldType>>(model: NotionDBModel<T>, message: string) {
-    try {
-        const query = notion.model(model);
-        const results = await query.findAll();
-        console.log(message, results);
-        return results;
-    } catch (error) {
-        console.error(`Error fetching ${message}:`, error);
-        return null;
-    }
-}
-
-async function getDogs() {
-    return await fetchData(Dogs, "Dogs retrieved:");
-}
-
-async function getArticles() {
-    return await fetchData(Articles, "Articles retrieved:");
-}
-
-async function getArticlePage(articleId: string) {
-    try {
-        const query = notion.model(Articles);
-        const results = await query.getPageContent(articleId);
-        console.log("Article Page Blocks:", results);
-        return results;
-    } catch (error) {
-        console.error("Error fetching article page:", error);
-        return null;
-    }
-}
-
-async function updateDog(dogId: string, newImageUrl: string) {
-    try {
-        const query = notion.model(Dogs);
-        const result = await query.updateRecord(dogId, {image: newImageUrl});
-        console.log("Updated Dog:", result);
-        return result;
-    } catch (error) {
-        console.error("Error updating dog:", error);
-    }
-}
-
-async function updateArticle(articleId: string, updates: Record<string, unknown>) {
-    try {
-        const query = notion.model(Articles);
-        const result = await query.updateRecord(articleId, updates);
-        console.log("Updated Article:", result);
-        return result;
-    } catch (error) {
-        console.error("Error updating article:", error);
-    }
-}
-
-async function createDog(data: Record<string, string>) {
-    try {
-        const query = notion.model(Dogs);
-        const result = await query.createRecord(data);
-        console.log("Created Dog:", result);
-        return result;
-    } catch (error) {
-        console.error("Error creating dog:", error);
-    }
-}
-
-async function deleteDog(dogId: string, deleteType: "in_trash" | "archived") {
-    try {
-        const query = notion.model(Dogs);
-        const result = await query.softDelete(dogId, deleteType);
-        console.log(`Dog moved to ${deleteType}:`, result);
-        return result;
-    } catch (error) {
-        console.error("Error deleting dog:", error);
-    }
-}
-
-async function restoreDog(dogId: string) {
-    try {
-        const query = notion.model(Dogs);
-        const result = await query.restoreRecord(dogId);
-        console.log("Restored Dog:", result);
-        return result;
-    } catch (error) {
-        console.error("Error restoring dog:", error);
-    }
-}
-
+// Self-invoking async function to demonstrate usage of the package.
 (async () => {
-    await getDogs();
-    await getArticles();
-    await getArticlePage("...86218917");
-    await updateDog("...0bb235c3", "https://example.com/new_dog_image.png");
-    await updateArticle("...e5888237", {
-        email: "updatedemail@example.com",
-        phone: "+123456789",
-        isPublished: "Live",
-        lastEditedTime: new Date().toISOString(),
+    // Retrieve all records from the Dogs model.
+    const dogs = await notion.model(Dogs).findAll(); // Fetch all dog records.
+    console.log("Dogs:", dogs); // Output fetched dog records.
+
+    // Retrieve all records from the Articles model.
+    const articles = await notion.model(Articles).findAll(); // Fetch all article records.
+    console.log("Articles:", articles); // Output fetched article records.
+
+    // Retrieve content blocks from a specific Article page.
+    const articleContent = await notion.model(Articles).getPageContent("1b7e15184d4d81e689afce8e86218917"); // Fetch article page content.
+    console.log("Article Page Blocks:", articleContent); // Output article content blocks.
+
+    // Update a specific Dog record with new details.
+    const updatedDog = await notion.model(Dogs).updateRecord("1d1e15184d4d817ab024fa780495f3b3", {
+        name: "New Dog Name", // New name for the dog.
+        image: "https://images.com/newdog" // New image URL for the dog.
     });
-    await createDog({
-        name: "Pitbull",
-        image: "https://pitbull.com/image.png"
+    console.log("Updated Dog:", updatedDog); // Output the updated dog record.
+
+    // Update a specific Article record with new details.
+    const updatedArticle = await notion.model(Articles).updateRecord("1b7e15184d4d81ecb3b0f754bf47538e", {
+        title: "New Article Name", // New title for the article.
+        isPublished: "Live" // New publication status for the article.
     });
-    await deleteDog("...912d9fc4", "in_trash");
-    await restoreDog("...912d9fc4");
+    console.log("Updated Article:", updatedArticle); // Output the updated article record.
+
+    // Create a new Dog record.
+    const createdDog = await notion.model(Dogs).createRecord({
+        name: "My New Dog", // Name of the new dog.
+        image: "https://newdog.com/image.png" // Image URL for the new dog.
+    });
+    console.log("Created Dog:", createdDog); // Output the created dog record.
+
+    // Uncomment to create a new Article record (example provided).
+    // const createdArticle = await notion.model(Articles).createRecord({
+    //     title: "My New Article", // Title for the new article.
+    //     isPublished: "Draft", // Set publication status as 'Draft'.
+    // })
+
+    // Soft delete a Dog record by moving it to archive.
+    const archivedDog = await notion.model(Dogs).softDelete("1b7e15184d4d80b59e28f1d1f333aea2", "archived"); // Archive a dog record.
+    console.log(`Dog moved to archive:`, archivedDog); // Output archived dog record.
+
+    // Soft delete a Dog record by moving it to trash.
+    const trashedDog = await notion.model(Dogs).softDelete("1b7e15184d4d8030b7c4ea0a3574ffbe", "in_trash"); // Move a dog record to trash.
+    console.log(`Dog moved to trash:`, trashedDog); // Output trashed dog record.
+
+    // Restore a previously soft-deleted Dog record.
+    const restoredDog = await notion.model(Dogs).restoreRecord("1b7e15184d4d80b59e28f1d1f333aea2"); // Restore an archived/trash dog record.
+    console.log("Restored Dog:", restoredDog); // Output restored dog record.
 })();
