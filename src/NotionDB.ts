@@ -28,6 +28,6 @@ export default class NotionDB {
     }
 
     model<T extends Record<string, NotionFieldType>>(notionModel: NotionDBModel<T>): NotionDBQueryBuilder<T> {
-        return new NotionDBQueryBuilder<T>(notionModel, this._connection);
+        return new NotionDBQueryBuilder<T>(notionModel, this._connection, this._config);
     }
 }
