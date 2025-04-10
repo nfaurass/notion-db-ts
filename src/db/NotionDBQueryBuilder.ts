@@ -1,10 +1,7 @@
 import NotionDBConnection from "./NotionDBConnection";
 import NotionDBModel from "./NotionDBModel";
 import {
-    NotionDeletePageType,
-    NotionFieldType,
-    NotionQuery,
-    NotionQueryOrderBy,
+    NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy, NotionSafeResponse,
 } from "../types/index.types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
@@ -40,13 +37,13 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return this;
     }
 
-    async findAll(): Promise<Record<keyof T, string>[]> {
+    async findAll(): Promise<NotionSafeResponse<Record<keyof T, string>[]>> {
         const data = await this._connection.get<T>(this.query, this._model);
         this.resetQuery();
         return data;
     }
 
-    getPageContent = (recordId: string): Promise<string[]> => this._connection.getBlocks(recordId);
+    getPageContent = (recordId: string) => this._connection.getBlocks(recordId);
 
     updateRecord = (recordId: string, fields: Partial<Record<keyof T, string>>) => this._connection.patch<T>(recordId, fields, this._model);
 
