@@ -3,7 +3,7 @@ import NotionDB from "../src/NotionDB";
 // import NotionDB from "notion-db-ts" // Use this for production.
 
 // Import the configuration interface for NotionDB.
-import {NotionDBConfig} from "../src/types/index.types";
+import {NotionDBConfig} from "../src/types";
 
 // Define the Notion Database configuration.
 const config: NotionDBConfig = {
