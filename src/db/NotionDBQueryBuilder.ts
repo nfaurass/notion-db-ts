@@ -2,7 +2,7 @@ import NotionDBConnection from "./NotionDBConnection";
 import NotionDBModel from "./NotionDBModel";
 import {
     NotionDBConfig, NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy, NotionSafeResponse,
-} from "../types/index.types";
+} from "../types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
     public query: NotionQuery<T> = {};

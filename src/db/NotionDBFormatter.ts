@@ -5,7 +5,7 @@ import {
     NotionFieldTypeNumber, NotionFieldTypePeople, NotionFieldTypePhoneNumber, NotionFieldTypeRichText,
     NotionFieldTypeSelect, NotionFieldTypeStatus, NotionFieldTypeTitle, NotionFieldTypeUrl,
     NotionPage, NotionResponse, NotionBlock, NotionBlockType
-} from "../types/index.types";
+} from "../types";
 
 export default class NotionDBFormatter {
 

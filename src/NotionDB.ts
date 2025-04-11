@@ -1,4 +1,4 @@
-import {NotionDBConfig, NotionFieldType} from "./types/index.types";
+import {NotionDBConfig, NotionFieldType} from "./types";
 import NotionDBConnection from "./db/NotionDBConnection";
 import NotionDBModel from "./db/NotionDBModel";
 import NotionDBQueryBuilder from "./db/NotionDBQueryBuilder";

@@ -1,7 +1,7 @@
 import {
     NotionBlockResponse, NotionDBConfig, NotionDeletePageType, NotionFieldType, NotionQuery,
     NotionErrorResponse, NotionSafeResponse, NotionResponse, NotionPage, NotionBlockType, NotionHeaders
-} from "../types/index.types";
+} from "../types";
 import NotionDBModel, {NotionDBError} from "./NotionDBModel";
 import NotionDBEndpoints from "./NotionDBEndpoints";
 import NotionDBFormatter from "./NotionDBFormatter";
