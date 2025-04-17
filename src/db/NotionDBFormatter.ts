@@ -4,7 +4,7 @@ import {
     NotionFieldTypeLastEditedBy, NotionFieldTypeLastEditedTime, NotionFieldTypeMultiSelect,
     NotionFieldTypeNumber, NotionFieldTypePeople, NotionFieldTypePhoneNumber, NotionFieldTypeRichText,
     NotionFieldTypeSelect, NotionFieldTypeStatus, NotionFieldTypeTitle, NotionFieldTypeUrl,
-    NotionPage, NotionResponse, NotionBlock, NotionBlockType
+    NotionPage, NotionResponse, NotionBlock, NotionBlockType, NotionQuery, NotionFilterType
 } from "../types";
 
 export default class NotionDBFormatter {
@@ -131,5 +131,15 @@ export default class NotionDBFormatter {
 
     static formatCreateRequest<T extends Record<string, NotionFieldType>>(record: Record<keyof T, string>, schema: T) {
         return {properties: this.buildProperties(record, schema)};
+    }
+
+    static formatFilters<T extends Record<string, NotionFieldType>>(query: NotionQuery<T>, schema: T) {
+        const where = query.where;
+        if (!where) return {}
+        const filters = Object.entries(where).map(([prop, filterObj]: [keyof T, NotionFilterType<T[keyof T]>]) => ({
+            property: prop as string,
+            [schema[prop]]: filterObj,
+        }));
+        return Object.entries(where).length === 1 ? {filter: filters[0]} : {filter: {and: filters}}
     }
 }
