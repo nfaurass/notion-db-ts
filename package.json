@@ -1,6 +1,6 @@
 {
   "name": "notion-db-ts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight TypeScript ORM designed for Notion.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
