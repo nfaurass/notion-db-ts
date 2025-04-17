@@ -428,7 +428,7 @@ export type NotionFieldTypeFiles = {
  * @property {boolean} [delete] - Flag to delete matching records.
  */
 export type NotionQuery<T> = {
-    where?: Partial<Record<keyof T, string>>;
+    where?: NotionFilterObject<Partial<T>>;
     select?: (keyof T)[];
     orderBy?: NotionQueryOrderBy<T>;
     limit?: number;
@@ -648,3 +648,114 @@ export type NotionHeaders = {
     "Notion-Version": string;
     "Content-Type": string;
 };
+
+type NotionFilterTypeEmptyObject = Record<string, never>;
+
+type NotionFilterTypeDate = {
+    "after"?: string,
+    "before"?: string,
+    "next_month"?: NotionFilterTypeEmptyObject,
+    "next_week"?: NotionFilterTypeEmptyObject,
+    "next_year"?: NotionFilterTypeEmptyObject,
+    "on_or_after"?: string,
+    "on_or_before"?: string,
+    "past_month"?: NotionFilterTypeEmptyObject,
+    "past_week"?: NotionFilterTypeEmptyObject,
+    "past_year"?: NotionFilterTypeEmptyObject,
+    "this_week"?: NotionFilterTypeEmptyObject,
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "equals"?: string,
+    "does_not_equal"?: string,
+}
+
+type NotionFilterTypeFiles = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+}
+
+type NotionFilterTypeStatus = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "equals"?: string,
+    "does_not_equal"?: string,
+}
+
+type NotionFilterTypeSelect = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "equals"?: string,
+    "does_not_equal"?: string,
+}
+
+type NotionFilterTypeNumber = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "equals"?: string,
+    "does_not_equal"?: string,
+    "greater_than"?: string,
+    "less_than"?: string,
+    "greater_than_or_equal_to"?: string,
+    "less_than_or_equal_to"?: string,
+}
+
+type NotionFilterTypeRelation = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "contains"?: string,
+    "does_not_contain"?: string,
+}
+
+type NotionFilterTypePeople = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "contains"?: string,
+    "does_not_contain"?: string,
+}
+
+type NotionFilterTypeRichText = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "equals"?: string,
+    "does_not_equal"?: string,
+    "contains"?: string,
+    "does_not_contain"?: string,
+    "ends_with"?: string,
+    "starts_with"?: string,
+}
+
+type NotionFilterTypeMultiSelect = {
+    "is_empty"?: boolean,
+    "is_not_empty"?: boolean,
+    "contains"?: string,
+    "does_not_contain"?: string,
+}
+
+type NotionFilterTypeId = {
+    "equals"?: string,
+    "does_not_equal"?: string,
+    "greater_than"?: number,
+    "less_than"?: number,
+    "greater_than_or_equal_to"?: number,
+    "less_than_or_equal_to"?: number,
+}
+
+export type NotionFilterType<Value> =
+    Value extends NotionFieldType ? (
+            Value extends "date" ? NotionFilterTypeDate :
+                Value extends "status" ? NotionFilterTypeStatus :
+                    Value extends "select" ? NotionFilterTypeSelect :
+                        Value extends "file" ? NotionFilterTypeFiles :
+                            Value extends "number" ? NotionFilterTypeNumber :
+                                Value extends "relation" ? NotionFilterTypeRelation :
+                                    Value extends "people" ? NotionFilterTypePeople :
+                                        Value extends "rich_text" | "title" | "url" ? NotionFilterTypeRichText :
+                                            Value extends "multi_select" ? NotionFilterTypeMultiSelect :
+                                                Value extends "id" ? NotionFilterTypeId :
+                                                    NotionFilterTypeEmptyObject) :
+        NotionFilterTypeEmptyObject;
+
+
+export type NotionFilterObject<T> = {
+    [K in keyof T]?: NotionFilterType<T[K]>;
+}
