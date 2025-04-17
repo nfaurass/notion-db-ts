@@ -3,7 +3,7 @@ import NotionDBConnection from "./db/NotionDBConnection";
 import NotionDBModel from "./db/NotionDBModel";
 import NotionDBQueryBuilder from "./db/NotionDBQueryBuilder";
 
-export default class NotionDB {
+export class NotionDB {
     private readonly _config: NotionDBConfig;
     private readonly _models: Set<NotionDBModel<Record<string, NotionFieldType>>> = new Set();
     private readonly _connection: NotionDBConnection;

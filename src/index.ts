@@ -1,4 +1,2 @@
-import NotionDB from "./NotionDB";
-
-export default NotionDB;
+export {NotionDB} from "./NotionDB";
 export * from "./types";
