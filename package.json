@@ -2,22 +2,24 @@
   "name": "notion-db-ts",
   "version": "1.0.0",
   "description": "A lightweight TypeScript ORM designed for Notion.",
-  "main": "./src/NotionDB.ts",
-  "types": "./src/types/index.types.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/types/index.types.ts",
-      "default": "./src/NotionDB.ts"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
-    "src"
+    "dist"
   ],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "dev": "ts-node src/NotionDB.ts",
-    "prepare": "npm run typecheck"
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
