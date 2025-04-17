@@ -67,8 +67,9 @@ export default class NotionDBConnection {
 
     async get<T extends Record<string, NotionFieldType>>(query: NotionQuery<T>, model: NotionDBModel<T>): Promise<NotionSafeResponse<Record<keyof T, string>[]>> {
         const endpoint = NotionDBEndpoints.query_model_for_records(model.id);
+        const queryPayload = query ? NotionDBFormatter.formatFilters(query, model.schema) : {};
         return this.safeExecute(async () => {
-            const response = await this._request<NotionResponse<T>>(endpoint, "POST");
+            const response = await this._request<NotionResponse<T>>(endpoint, "POST", queryPayload);
             return NotionDBFormatter.formatResponse(response as NotionResponse<T>, model.schema) as Record<keyof T, string>[]
         });
     }
