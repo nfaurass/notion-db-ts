@@ -2,6 +2,7 @@ import NotionDBConnection from "./NotionDBConnection";
 import NotionDBModel from "./NotionDBModel";
 import {
     NotionDBConfig, NotionDeletePageType, NotionFieldType, NotionQuery, NotionQueryOrderBy, NotionSafeResponse,
+    NotionFilterObject
 } from "../types";
 
 export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldType>> {
@@ -21,7 +22,7 @@ export default class NotionDBQueryBuilder<T extends Record<string, NotionFieldTy
         return await fn();
     }
 
-    public where(condition: Partial<Record<keyof T, string>>): this {
+    public where(condition: NotionFilterObject<Partial<T>>): this {
         this.query.where = condition;
         return this;
     }
