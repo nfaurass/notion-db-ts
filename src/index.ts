@@ -1,2 +1,2 @@
 export {NotionDB} from "./NotionDB";
-export * from "./types";
+export {NotionDBConfig, NotionDBConfigCapabilities, NotionPage, NotionResponse} from "./types";
